@@ -1,0 +1,17 @@
+.classpath
+*/.classpath
+.project
+*/.project
+.settings/
+target/
+*/target/
+test-output/
+.directory
+*.swp
+*.orig
+*.log
+*/bin/
+.metadata/
+.idea/
+*.iml
+/*.iml
