@@ -14,11 +14,11 @@ public class App {
     public static void main(String[] args) throws InterruptedException {
 
         for (int i = 0; i < MAX_OPERATOR; i++) {
-            dispatcher.addEmployeeAvailable(new Employee(EmployeeTypes.OPERATOR));
+            dispatcher.addEmployee(new Employee(EmployeeTypes.OPERATOR));
         }
 
         for (int i = 0; i < MAX_SUPERVISOR; i++) {
-            dispatcher.addEmployeeAvailable(new Employee(EmployeeTypes.SUPERVISOR));
+            dispatcher.addEmployee(new Employee(EmployeeTypes.SUPERVISOR));
         }
 
         for (int i = 0; i < MAX_CALLS; i++) {

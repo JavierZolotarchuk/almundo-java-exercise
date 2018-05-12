@@ -22,6 +22,10 @@ public class Employee {
     public void answer(Call call) throws InterruptedException {
         System.out.println(type + " Respondiendo llamada: " + call.getId() + " son las: " + new Date().getTime());
         call.answer();
-        dispatcher.addEmployeeAvailable(this);
+        notifyDisponibility();
+    }
+
+    private void notifyDisponibility() throws InterruptedException {
+        dispatcher.addEmployee(this);
     }
 }
