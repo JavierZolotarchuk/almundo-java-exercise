@@ -1,3 +1,7 @@
+package domain;
+
+import util.QueueBlock;
+
 import java.util.Comparator;
 
 /**
@@ -19,26 +23,19 @@ public class Dispatcher {
         }
     }
 
-    public void addEmployee(Employee employee) throws InterruptedException {
+    public void addEmployee(Employee employee) {
         employeesQueque.add(employee);
     }
 
-    private Call getCall() throws InterruptedException {
-       return callsQueue.poll();
-    }
-
-    public void addCall(Call call) throws InterruptedException {
+    public void addCall(Call call) {
         callsQueue.add(call);
     }
 
 
     public void run() {
-
         while (true) {
             try {
-                Call call = getCall(); // si no hay llamadas se bloquea
-                Employee employee = getEmployeeAvilable(); //si no hay empleados se bloquea
-                delegateCall(employee,call); //abre un hilo donde el empleado atiende la llamada
+                dispatchCall();
             } catch (Exception e) {
                 System.out.println("Ocurrio un error: " + e.getStackTrace().toString());
                 e.printStackTrace();
@@ -46,22 +43,32 @@ public class Dispatcher {
         }
     }
 
+    public void dispatchCall() {
+        Call call = getCall(); // si no hay llamadas se bloquea (hasta que haya una nueva llamada)
+        Employee employee = getEmployeeAvilable(); //si no hay empleados se bloquea (hasta que haya un empleado libre)
+        delegateCall(employee,call); //abre un hilo donde el empleado atiende la llamada
+    }
+
+    public Employee getEmployeeAvilable() {
+        employeesQueque.blockingBeforeGet();
+        final Employee employee = getEmployeeWithLowerHierarchy();
+        removeEmployee(employee);
+        employeesQueque.unBlock();
+        return employee;
+    }
+
+    private Call getCall() {
+        return callsQueue.poll();
+    }
+
     private void delegateCall(Employee employee,Call call) {
         new Thread(() ->{
             try {
                 employee.answer(call);
-            } catch(InterruptedException v) {
-                System.out.println(v);
+            } catch(Exception e) {
+                e.printStackTrace();
             }
         }).start();
-    }
-
-    public Employee getEmployeeAvilable() throws InterruptedException {
-        employeesQueque.blockingBeforeGet();
-        final Employee employee = getEmployeeWithLowerHierarchy();
-        removeEmployee(employee);
-        employeesQueque.unLocking();
-        return employee;
     }
 
     private Employee getEmployeeWithLowerHierarchy() {

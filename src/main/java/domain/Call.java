@@ -1,3 +1,5 @@
+package domain;
+
 import java.util.Random;
 
 /**
@@ -16,7 +18,7 @@ public class Call {
 
     public void answer() throws InterruptedException {
         Random rand = new Random();
-        int randomNum = 20000; //(rand.nextInt((15 - 10) + 1) + 10) * 1000;
+        int randomNum = 100; //(rand.nextInt((15 - 10) + 1) + 10) * 1000;
         System.out.println("ID: " + id + " Me voy a dormir x " + randomNum/1000 + " segundos");
         try {
             Thread.sleep(randomNum);

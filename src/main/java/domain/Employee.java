@@ -1,3 +1,5 @@
+package domain;
+
 import java.util.Date;
 
 /**
@@ -6,14 +8,9 @@ import java.util.Date;
 public class Employee {
 
     private Dispatcher dispatcher = Dispatcher.getInstance();
-
-    public EmployeeTypes getType() {
-        return type;
-    }
+    private EmployeeTypes type;
 
     public int getPriority() { return type.getOrderNum(); }
-
-    private EmployeeTypes type;
 
     public Employee(EmployeeTypes type) {
         this.type = type;

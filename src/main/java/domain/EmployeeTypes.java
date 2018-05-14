@@ -1,3 +1,5 @@
+package domain;
+
 /**
  * Created by javierzolotarchuk on 12/05/18.
  */
@@ -13,5 +15,4 @@ public enum EmployeeTypes {
     public int getOrderNum() {
         return orderNum;
     }
-
 }
