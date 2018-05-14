@@ -28,6 +28,7 @@ public class Dispatcher {
     }
 
     public void addCall(Call call) {
+        System.out.println("ID: " + call.getId()  + " Espere por favor, ya sera atendido");
         callsQueue.add(call);
     }
 
@@ -37,7 +38,7 @@ public class Dispatcher {
             try {
                 dispatchCall();
             } catch (Exception e) {
-                System.out.println("Ocurrio un error: " + e.getStackTrace().toString());
+                System.out.println("Ocurrio un error: " + e.getStackTrace());
                 e.printStackTrace();
             }
         }

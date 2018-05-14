@@ -10,6 +10,8 @@ public class Employee {
     private Dispatcher dispatcher = Dispatcher.getInstance();
     private EmployeeTypes type;
 
+    public EmployeeTypes getType() { return type; }
+
     public int getPriority() { return type.getOrderNum(); }
 
     public Employee(EmployeeTypes type) {

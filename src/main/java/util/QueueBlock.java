@@ -14,7 +14,11 @@ public class QueueBlock<T> {
     private Semaphore mutexElement = new Semaphore(1);
     private List<T> list = new ArrayList<>();
 
-    public List<T> getOriginalQueue() { return list; } //TODO leer siempre y cuando se lockee desde afuera
+/*
+ * Este metodo no maneja concurrencia, para usarlo se debe usar:
+ * el par de metodos block() (o su variante blockingBeforeGet()) y unBlock()
+ */
+ public List<T> getOriginalQueue() { return list; }
 
     public void add(T e) {
         block();
@@ -31,7 +35,11 @@ public class QueueBlock<T> {
         return element;
     }
 
-    public void removeElement(T e) { //TODO documentar que se recomienda solo lockeando y deslockeando a mano
+ /*
+ * Este metodo no maneja concurrencia, para usarlo se debe usar:
+ * el par de metodos block() (o su variante blockingBeforeGet()) y unBlock()
+ */
+    public void removeElement(T e) {
         list = list.stream()
                 .filter(elem -> elem != e)
                 .collect(Collectors.toList());
@@ -53,7 +61,7 @@ public class QueueBlock<T> {
         mutexElement.release();
     }
 
-    private void block() { acquireWithoutCheckedExeption(mutexElement); }
+    public void block() { acquireWithoutCheckedExeption(mutexElement); }
 
     private void upCount() { countElements.release(); }
 
