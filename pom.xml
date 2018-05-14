@@ -12,8 +12,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>4.11</junit.version>
         <mockito.version>1.8.4</mockito.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <slf4j.simple.version>1.6.4</slf4j.simple.version>
         <surefire-junit47.version>2.19.1</surefire-junit47.version>
         <powermock.version>1.7.1</powermock.version>
     </properties>
@@ -42,16 +40,6 @@
             <artifactId>mockito-all</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.simple.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.surefire</groupId>
