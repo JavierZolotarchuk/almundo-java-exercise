@@ -36,59 +36,5 @@ public class App {
         }
 
         dispatcher.run();
-
-    }
-
-}
-
-/*
-public class App {
-
-    private static final int MAX_OPERATOR = 3;
-    private static final int MAX_SUPERVISOR = 1;
-    private static final int MAX_DIRECTOR = 1;
-
-    private static final int MAX_CALLS = 10;
-
-    private static domain.Dispatcher dispatcher = domain.Dispatcher.getInstance();
-    private static Semaphore semaphoreOperator = new Semaphore(MAX_OPERATOR);
-    private static Semaphore semaphoreSupervisor = new Semaphore(MAX_SUPERVISOR);
-    private static Semaphore semaphoreDirector = new Semaphore(MAX_DIRECTOR);
-
-    public static void main(String[] args) throws InterruptedException {
-
-        //Inicializando llamadas
-        for (int i = 0; i < MAX_CALLS; i++) {
-            domain.Call call = new domain.Call(i);
-            dispatcher.dispatchCall(call);
-        }
-
-        int countOperators = semaphoreOperator.availablePermits();
-        int countSupervisors = semaphoreSupervisor.availablePermits();
-        int countDirectors = semaphoreDirector.availablePermits();
-
-        int totalEmployees = countOperators + countSupervisors + countDirectors;
-
-        ExecutorService executor = Executors.newFixedThreadPool(totalEmployees);
-
-        //Inicializando Operadores
-        for (int i = 0; i < countOperators; i++) {
-            executor.execute(new Operator(semaphoreOperator));
-        }
-
-        //Inicializando Supervisores
-        for (int i = 0; i < countSupervisors; i++) {
-            executor.execute(new Supervisor(semaphoreSupervisor,semaphoreOperator));
-        }
-
-        //Inicializando Directores
-        for (int i = 0; i < countDirectors; i++) {
-            executor.execute(new Director(semaphoreDirector,semaphoreSupervisor));
-        }
     }
 }
-
-
-
-
- */

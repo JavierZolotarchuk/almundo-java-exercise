@@ -8,9 +8,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import util.QueueBlock;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.mockito.Mockito.*;
 
 /**
  * Created by javierzolotarchuk on 14/05/18.
@@ -20,6 +23,50 @@ import java.util.stream.Collectors;
 public class DispatcherTest {
 
     Dispatcher dispatcher = Dispatcher.getInstance();
+
+    @Test
+    public void addCall() throws Exception {
+
+        QueueBlock<Call> callsQuequeMock = mock(QueueBlock.class);
+        Whitebox.setInternalState(dispatcher,"callsQueue",callsQuequeMock);
+
+        Call call = new Call(0);
+        dispatcher.addCall(call);
+
+        verify(callsQuequeMock,times(1)).add(call);
+    }
+
+    @Test
+    public void addEmployee() throws Exception {
+
+        QueueBlock<Employee> employeesQuequeMock = mock(QueueBlock.class);
+        Whitebox.setInternalState(dispatcher,"employeesQueque",employeesQuequeMock);
+
+        Employee employee = new Employee(EmployeeTypes.OPERATOR);
+        dispatcher.addEmployee(employee);
+
+        verify(employeesQuequeMock,times(1)).add(employee);
+    }
+
+    @Test
+    public void getEmployeeAvilable() {
+
+        QueueBlock<Employee> employeesQuequeMock = mock(QueueBlock.class);
+        Whitebox.setInternalState(dispatcher,"employeesQueque",employeesQuequeMock);
+
+        List<Employee> employees = new ArrayList<>();
+        Employee employee = new Employee(EmployeeTypes.OPERATOR);
+        employees.add(employee);
+
+        when(employeesQuequeMock.getOriginalQueue()).thenReturn(employees);
+
+        dispatcher.getEmployeeAvilable();
+
+        verify(employeesQuequeMock,times(1)).blockAndDownCount();
+        verify(employeesQuequeMock,times(1)).getOriginalQueue();
+        verify(employeesQuequeMock,times(1)).removeElement(employee);
+        verify(employeesQuequeMock,times(1)).unBlock();
+    }
 
     @Test
     public void getEmployeeWithLowerHierarchyWithAlTypesOfEmployees() throws Exception {
@@ -61,6 +108,5 @@ public class DispatcherTest {
 
         Assert.assertEquals(employee.getType(),typeExpected);
     }
-
 
 }

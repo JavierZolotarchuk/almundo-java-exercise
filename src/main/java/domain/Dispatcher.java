@@ -51,7 +51,7 @@ public class Dispatcher {
     }
 
     public Employee getEmployeeAvilable() {
-        employeesQueque.blockingBeforeGet();
+        employeesQueque.blockAndDownCount();
         final Employee employee = getEmployeeWithLowerHierarchy();
         removeEmployee(employee);
         employeesQueque.unBlock();
