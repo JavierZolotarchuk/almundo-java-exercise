@@ -1,6 +1,8 @@
 **Almundo.com -Java Exercise-**
 
-![Alt text](relative/path/to/modelado.jpg?raw=true "Modelado")
+## Modelado
+
+![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/modelado.jpg)
 
 Es un flujo bastante simple, en donde la clase **Dispatcher** recibe todas las llamadas y las va derivando a los distintos empleados, antes de derivar una llamada chequea los empleados que tiene disponibles y elige uno teniendo en cuenta la condicion de negocio que dice que las llamadas las deben tomar los operadores, solo pueden tomarlas los supervisores cuando todos los operadores esten ocupados y los directores cuando todos los operadores y supervisores esten ocupados.
 
