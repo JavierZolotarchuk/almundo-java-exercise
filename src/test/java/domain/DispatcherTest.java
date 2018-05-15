@@ -60,9 +60,9 @@ public class DispatcherTest {
 
         when(employeesQuequeMock.getOriginalQueue()).thenReturn(employees);
 
-        dispatcher.getEmployeeAvilable();
+        dispatcher.getEmployeeAvailable();
 
-        verify(employeesQuequeMock,times(1)).blockAndDownCount();
+        verify(employeesQuequeMock,times(1)).downCountAndBlock();
         verify(employeesQuequeMock,times(1)).getOriginalQueue();
         verify(employeesQuequeMock,times(1)).removeElement(employee);
         verify(employeesQuequeMock,times(1)).unBlock();

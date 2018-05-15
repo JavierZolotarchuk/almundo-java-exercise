@@ -1,10 +1,10 @@
 **Almundo.com -Java Exercise-**
 
-## Modelado
+## Modelo del sistema gral
 
-![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/modelado.jpg)
+![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/images/modelado.jpg)
 
-Es un flujo bastante simple, en donde la clase **Dispatcher** recibe todas las llamadas y las va derivando a los distintos empleados, antes de derivar una llamada chequea los empleados que tiene disponibles y elige uno teniendo en cuenta la condicion de negocio que dice que las llamadas las deben tomar los operadores, solo pueden tomarlas los supervisores cuando todos los operadores esten ocupados y los directores cuando todos los operadores y supervisores esten ocupados.
+Es un flujo bastante simple, en donde la clase **Dispatcher** recibe todas las llamadas y las va derivando a los distintos empleados, antes de derivar una llamada chequea los empleados que tiene disponibles y elige uno teniendo en cuenta la regla de negocio que dice que las llamadas las deben tomar los operadores, solo pueden tomarlas los supervisores cuando todos los operadores esten ocupados y los directores cuando todos los operadores y supervisores esten ocupados.
 
 La clase **Dispatcher** recibe las llamadas a travez del metodo **addCall** lo que provoca que la misma se encole para luego derivarla.
 
@@ -12,20 +12,36 @@ Con lo empleados ocurre algo similar, la clase **Dispatcher** cuenta con el meto
 
 **Y todo esto como funciona?**
 
+Vamos por partes, si bien el ejemplo lo desarrollamos de manera secuencial, esto es solo con fin didactico ya que en la realidad es un sistema concurrente (no necesariamente se va a ejecutar todo en el orden que lo vamos a explicar)
+
 La clase **Dispatcher** maneja 2 colas que soportan concurrencia, las mismas son usadas para almacenar a las llamadas y a los empleados.
 
-La sincronizacion de las colas se maneja de tal forma que si no hay llamadas, el **Dispatcher** se blockea esperando a que aparezca una nueva llamada y en ese entonces busca un empleado. Es decir si no hay llamadas no se queda loopeando hasta que aparezca alguna (no usamos espera activa). Sino que cuando aparece una nueva llamada, destraba la ejecucion y se delega la respuesta de la misma en un empleado.
+**Ingreso de llamadas:**
 
-Con la cola de empleados ocurre lo mismo, si al momento de querer contestar una llamada no hay ninguno libre, se queda blockeado hasta que venga uno y pueda responderla.
+![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/images/ingresoLlamadas.jpg)
 
-Al momento de elegir al empleado, se llama al metodo **getEmployeeWithLowerHierarchy** el cual nos da al empleado de menor jerarquia, lo cual cumple con el requerimiento pedido. Una vez encontrado el empleado de menor jerarquia, el mismo es eliminado de la cola ya que no va a estar disponible hasta terminar de contestar la llamada.
+las llamadas las recibe el **dispatcher** a travez del metodo addCall y las enconla en una cola concurrente. A medida que las llamadas se van atendiendo se van eliminando de la cola. Es decir en la cola solo estan las colas pendientes por atender.
 
-Lo mismo ocurre con las llamadas, a medida que se van costentando se van eliminando de la cola.
+**Ingreso de empleados:**
 
-Cuando se obtuvo una llamada y un empleado, se procede a contestarla para hacer esto se abre un Thread y se le dice al empleado que responda la llamada **( employee.answer(call) )**, debido a que abrimos un hilo para esto podemos responder tantas llamadas en paralelo como empleados libres tengamos.
+![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/images/ingresoEmpleados.jpg)
 
-Cuando el empleado termina de contestar la llamada, el mismo conoce al **Dispatcher** (que es un Singleton) y se notifica como disponible lo cual le permite poder responder nuevas llamadas (es nuevamente agregado en la cola de empleados).
+los empleados los recibe el **dispatcher** a travez del metodo **addEmployee** y los encola en una cola concurrente. El **dispatcher** los va a ir sacando de la lista en medida que tenga llamdas para responder, cuando vaya a buscar un empleado. Va a mirar todos los que tiene en la cola (que son lo que estan disponibles para atender) y de esos va a elegir el que tenga menor grado de jerarquia. Entendiendo por jerarquia los puestos **(Operador,Supervisor y Director)**.
+Al elegir un empleado para atender una llamada, el mismo es borrado de la cola ya que solo estan los que estan disponibles para atender llamadas. Cuando el empleado finaliza la llamada, el mismo le notifica al **dispatcher** que esta listo para atender nuevas llamadas y este ultimo lo vuelve a agregar en la cola.
 
-Como ya dijimos antes vamos a poder responder tantas llamadas en paralelo como cantidad de empleados tengamos disponibles. Si hay mas llamadas que empleados, estas simplemente van a permanecer mas tiempo en la cola y a medida que los empleados se vayan desocupando las van a ir tomando.
 
-Si bien no hay un limite fijo de cuantas llamadas se pueden atender con x cantidad de empleados, se debe hacer a conciencia ya que no queremos quedar mal con los clientes ;).
+**Uso de las colas:**
+
+![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/images/manejoDeLasColas.jpg)
+
+Tanto la cola de llamadas como la cola de empleados tienen un semaforo contador el cual hace que si la cola esta vacia, el **dispatcher** quede bloqueado hasta que el evento de insercion lo despierte.
+
+Por ej: si no hay llamadas para atender, el **dispatcher** no se queda procesando. Cuando llega una nueva llamada esta lo despierta (desbloquea el semaforo) y permite que siga procesando (la atienda).
+
+Lo mismo pasa con los empleados, si tenemos una llamda para atender y no hay ningun empleado libre, el **dispatcher** queda bloqueado hasta que se desocupe un empleado y lo despierte.
+
+Otra solucion podria haber sido hacer una espera activa preguntando si por ej ya habia algun empleado libre pero consume procesamiento ya que hay que andar preguntando muchas veces. Por dicho motivo se eligio el semaforo contador.
+
+Los bloqueos se pueden ver claramente en la implementacion de los metodos **getCall** y **getEmployeeAvailable**, si estos 2 pasan sin bloquearse, significa que tenemos llamdas por atender y empleados libres es entonces que se llama al metodo **delegateCall** el cual abre un Thread y le dice al empleado que responda la llamada **( employee.answer(call) )**. Gracias a esto podemos responder paralelamente tantas llamadas como empleados tengamos.
+
+Debido al diseño del sistema, cuando haya mas llamadas que empleados estas simplemente se van a encolar y van a ser atendidas a medida que se desocupen los empleados

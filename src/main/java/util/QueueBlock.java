@@ -16,7 +16,7 @@ public class QueueBlock<T> {
 
 /*
  * Este metodo no maneja concurrencia, para usarlo se debe usar:
- * el par de metodos block() (o su variante blockAndDownCount()) y unBlock()
+ * el par de metodos block() (o su variante downCountAndBlock()) y unBlock()
  */
  public List<T> getOriginalQueue() { return list; }
 
@@ -37,7 +37,7 @@ public class QueueBlock<T> {
 
  /*
  * Este metodo no maneja concurrencia, para usarlo se debe usar:
- * el par de metodos block() (o su variante blockAndDownCount()) y unBlock()
+ * el par de metodos block() (o su variante downCountAndBlock()) y unBlock()
  */
     public void removeElement(T e) {
         list = list.stream()
@@ -52,7 +52,7 @@ public class QueueBlock<T> {
         return size;
     }
 
-    public void blockAndDownCount() {
+    public void downCountAndBlock() {
         downCount();
         block();
     }

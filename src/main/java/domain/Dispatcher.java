@@ -39,19 +39,18 @@ public class Dispatcher {
                 dispatchCall();
             } catch (Exception e) {
                 System.out.println("Ocurrio un error: " + e.getStackTrace());
-                e.printStackTrace();
             }
         }
     }
 
     public void dispatchCall() {
         Call call = getCall(); // si no hay llamadas se bloquea (hasta que haya una nueva llamada)
-        Employee employee = getEmployeeAvilable(); //si no hay empleados se bloquea (hasta que haya un empleado libre)
+        Employee employee = getEmployeeAvailable(); //si no hay empleados se bloquea (hasta que haya un empleado libre)
         delegateCall(employee,call); //abre un hilo donde el empleado atiende la llamada
     }
 
-    public Employee getEmployeeAvilable() {
-        employeesQueque.blockAndDownCount();
+    public Employee getEmployeeAvailable() {
+        employeesQueque.downCountAndBlock();
         final Employee employee = getEmployeeWithLowerHierarchy();
         removeEmployee(employee);
         employeesQueque.unBlock();
