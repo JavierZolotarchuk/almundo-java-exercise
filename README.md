@@ -36,12 +36,12 @@ Al elegir un empleado para atender una llamada, el mismo es borrado de la cola y
 
 Tanto la cola de llamadas como la cola de empleados tienen un semaforo contador el cual hace que si la cola esta vacia, el **dispatcher** quede bloqueado hasta que el evento de insercion lo despierte.
 
-Por ej: si no hay llamadas para atender, el **dispatcher** no se queda procesando. Cuando llega una nueva llamada esta lo despierta (desbloquea el semaforo) y permite que siga procesando (la atienda).
+Por ej: si no hay llamadas para atender, el **dispatcher** no se queda procesando. Cuando llega una nueva llamada, esta lo despierta (desbloquea el semaforo) y permite que siga procesando (la atienda).
 
 Lo mismo pasa con los empleados, si tenemos una llamada para atender y no hay ningun empleado libre, el **dispatcher** queda bloqueado hasta que se desocupe un empleado y lo despierte.
 
 Otra solucion podria haber sido hacer una espera activa preguntando si por ej ya habia algun empleado libre pero consume procesamiento ya que hay que andar preguntando muchas veces. Por dicho motivo se eligio el semaforo contador.
 
-Los bloqueos se pueden ver claramente en la implementacion de los metodos **getCall** y **getEmployeeAvailable**, si estos 2 pasan sin bloquearse, significa que tenemos llamadas por atender y empleados libres es entonces que se llama al metodo **delegateCall** el cual abre un Thread y le dice al empleado que responda la llamada **( employee.answer(call) )**. Gracias a esto podemos responder paralelamente tantas llamadas como empleados tengamos.
+Los bloqueos se pueden ver claramente en la implementacion de los metodos **getCall** y **getEmployeeAvailable**, si estos 2 pasan sin bloquearse, significa que tenemos llamadas por atender y empleados libres es entonces que se llama al metodo **delegateCall** el cual abre un Thread y le dice al empleado que responda la llamada **( employee.answer(call) )**. Gracias a esto podemos responder paralelamente tantas llamadas como cantidad de empleados tengamos.
 
 Debido al diseño del sistema, cuando haya mas llamadas que empleados estas simplemente se van a encolar y van a ser atendidas a medida que se vayan desocupando los empleados. Esto se puede ver claramente en [AppTest](https://github.com/JavierZolotarchuk/almundo-java-exercise/blob/master/src/test/java/AppTest.java) donde hay 2 tests, uno que recibe tantas llamadas como empleados y otro que recibe una cantidad bastante mayor de llamadas que de empleados.
