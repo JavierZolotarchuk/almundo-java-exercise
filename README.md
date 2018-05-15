@@ -18,13 +18,13 @@ La clase **Dispatcher** maneja 2 colas que soportan concurrencia, las mismas son
 
 **Ingreso de llamadas:**
 
-![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/images/ingresoLlamadas.jpg)
+![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/images/ingresoLlamadas.png)
 
 las llamadas las recibe el **dispatcher** a travez del metodo addCall y las enconla en una cola concurrente. A medida que las llamadas se van atendiendo se van eliminando de la cola. Es decir en la cola solo estan las colas pendientes por atender.
 
 **Ingreso de empleados:**
 
-![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/images/ingresoEmpleados.jpg)
+![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/images/ingresoEmpleados.png)
 
 los empleados los recibe el **dispatcher** a travez del metodo **addEmployee** y los encola en una cola concurrente. El **dispatcher** los va a ir sacando de la lista en medida que tenga llamdas para responder, cuando vaya a buscar un empleado. Va a mirar todos los que tiene en la cola (que son lo que estan disponibles para atender) y de esos va a elegir el que tenga menor grado de jerarquia. Entendiendo por jerarquia los puestos **(Operador,Supervisor y Director)**.
 Al elegir un empleado para atender una llamada, el mismo es borrado de la cola ya que solo estan los que estan disponibles para atender llamadas. Cuando el empleado finaliza la llamada, el mismo le notifica al **dispatcher** que esta listo para atender nuevas llamadas y este ultimo lo vuelve a agregar en la cola.
@@ -32,7 +32,7 @@ Al elegir un empleado para atender una llamada, el mismo es borrado de la cola y
 
 **Uso de las colas:**
 
-![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/images/manejoDeLasColas.jpg)
+![alt text](https://raw.githubusercontent.com/JavierZolotarchuk/almundo-java-exercise/master/images/manejoDeLasColas.png)
 
 Tanto la cola de llamadas como la cola de empleados tienen un semaforo contador el cual hace que si la cola esta vacia, el **dispatcher** quede bloqueado hasta que el evento de insercion lo despierte.
 
